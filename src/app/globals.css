@@ -1,8 +1,13 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #09090b;
+  --foreground: #fafafa;
+}
+
+.light {
+  --background: #fafafa;
+  --foreground: #09090b;
 }
 
 @theme inline {
@@ -12,15 +17,50 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+}
+
+/* Light mode overrides */
+.light .light\:bg-white\/80 {
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.light .light\:border-zinc-200 {
+  border-color: rgb(228 228 231);
+}
+
+.light .light\:border-zinc-300 {
+  border-color: rgb(212 212 216);
+}
+
+.light .light\:text-zinc-900 {
+  color: rgb(24 24 27);
+}
+
+.light .light\:text-zinc-600 {
+  color: rgb(82 82 91);
+}
+
+.light .light\:text-zinc-700 {
+  color: rgb(63 63 70);
+}
+
+.light .light\:bg-zinc-100\/50 {
+  background-color: rgba(244, 244, 245, 0.5);
+}
+
+.light .light\:bg-zinc-200 {
+  background-color: rgb(228 228 231);
+}
+
+.light .light\:hover\:border-zinc-300:hover {
+  border-color: rgb(212 212 216);
+}
+
+.light .light\:border-l-zinc-300 {
+  border-left-color: rgb(212 212 216);
 }

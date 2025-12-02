@@ -1,65 +1,192 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import { useEffect, useState } from 'react';
+import { Sun, Moon, RefreshCw, ExternalLink } from 'lucide-react';
+import { useTheme } from '@/components/providers';
+import { ServiceList, StatusBadge } from '@/components/status';
+import { IncidentTimeline } from '@/components/incidents';
+import type { StatusResponse, ServiceStatus } from '@/types/status';
+import { formatRelativeTime, cn } from '@/lib/utils';
+
+export default function StatusPage() {
+  const { theme, toggleTheme } = useTheme();
+  const [data, setData] = useState<StatusResponse['data'] | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [lastRefresh, setLastRefresh] = useState<string>('');
+
+  const supportPortalUrl = process.env.NEXT_PUBLIC_SUPPORT_PORTAL_URL || 'http://localhost:3022';
+
+  const fetchStatus = async () => {
+    try {
+      const response = await fetch('/api/status');
+      if (!response.ok) throw new Error('Failed to fetch status');
+      const result: StatusResponse = await response.json();
+      setData(result.data);
+      setLastRefresh(new Date().toISOString());
+      setError(null);
+    } catch (err) {
+      setError('Unable to load status. Please try again.');
+      console.error('Status fetch error:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchStatus();
+
+    // Poll every 30 seconds
+    const interval = setInterval(fetchStatus, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const getOverallMessage = (status: ServiceStatus): string => {
+    switch (status) {
+      case 'operational':
+        return 'All systems operational';
+      case 'degraded':
+        return 'Some systems experiencing issues';
+      case 'outage':
+        return 'Major service disruption';
+      case 'maintenance':
+        return 'Scheduled maintenance in progress';
+      default:
+        return 'Status unknown';
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="flex items-center gap-3 text-zinc-400">
+          <RefreshCw className="h-5 w-5 animate-spin" />
+          <span>Loading status...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-400 mb-4">{error}</p>
+          <button
+            onClick={fetchStatus}
+            className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-lg text-sm transition-colors"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <main className="min-h-screen">
+      {/* Header */}
+      <header className="border-b border-zinc-800 light:border-zinc-200 bg-zinc-950/50 light:bg-white/50 backdrop-blur-sm sticky top-0 z-10">
+        <div className="max-w-4xl mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm">
+                JL
+              </div>
+              <h1 className="text-xl font-bold text-zinc-100 light:text-zinc-900">
+                System Status
+              </h1>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <button
+                onClick={fetchStatus}
+                className="p-2 rounded-lg hover:bg-zinc-800 light:hover:bg-zinc-100 transition-colors"
+                aria-label="Refresh status"
+              >
+                <RefreshCw className="h-4 w-4 text-zinc-400" />
+              </button>
+              <button
+                onClick={toggleTheme}
+                className="p-2 rounded-lg hover:bg-zinc-800 light:hover:bg-zinc-100 transition-colors"
+                aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+              >
+                {theme === 'dark' ? (
+                  <Sun className="h-4 w-4 text-zinc-400" />
+                ) : (
+                  <Moon className="h-4 w-4 text-zinc-600" />
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <div className="max-w-4xl mx-auto px-4 py-8 space-y-8">
+        {/* Overall Status Banner */}
+        {data && (
+          <section
+            className={cn(
+              'rounded-xl border p-6 text-center',
+              data.overall === 'operational' && 'border-green-500/30 bg-green-500/10',
+              data.overall === 'degraded' && 'border-yellow-500/30 bg-yellow-500/10',
+              data.overall === 'outage' && 'border-red-500/30 bg-red-500/10',
+              data.overall === 'maintenance' && 'border-blue-500/30 bg-blue-500/10'
+            )}
+            aria-live="polite"
+          >
+            <div className="flex flex-col items-center gap-3">
+              <StatusBadge status={data.overall} size="lg" />
+              <p className="text-lg text-zinc-300 light:text-zinc-700">
+                {getOverallMessage(data.overall)}
+              </p>
+              <p className="text-xs text-zinc-500">
+                Last updated: {formatRelativeTime(data.lastUpdated)}
+              </p>
+            </div>
+          </section>
+        )}
+
+        {/* Services Section */}
+        {data && (
+          <section aria-labelledby="services-heading">
+            <h2
+              id="services-heading"
+              className="text-lg font-semibold text-zinc-100 light:text-zinc-900 mb-4"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+              Services
+            </h2>
+            <ServiceList services={data.services} />
+          </section>
+        )}
+
+        {/* Active Incidents Section */}
+        {data && (
+          <IncidentTimeline
+            incidents={data.incidents}
+            title="Active Incidents"
+            emptyMessage="All systems are operating normally. No incidents to report."
+          />
+        )}
+
+        {/* Footer */}
+        <footer className="text-center text-xs text-zinc-600 light:text-zinc-500 pt-8 border-t border-zinc-800 light:border-zinc-200">
+          <a
+            href={supportPortalUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 px-4 py-2 mb-4 rounded-lg bg-zinc-800 light:bg-zinc-100 hover:bg-zinc-700 light:hover:bg-zinc-200 text-zinc-200 light:text-zinc-700 transition-colors text-sm font-medium"
+          >
+            <ExternalLink className="h-4 w-4" />
+            Back to Support Portal
+          </a>
+          <p>Built with Justice League SDLC Pipeline</p>
+          <p className="mt-1">
+            9 Agents • Full SDLC • ~$1.50 Total Cost
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+        </footer>
+      </div>
+    </main>
   );
 }
