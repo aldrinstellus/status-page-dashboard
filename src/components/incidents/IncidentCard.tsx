@@ -38,23 +38,21 @@ export function IncidentCard({ incident, showUpdates = true }: IncidentCardProps
           </div>
           <div className="flex items-center gap-2">
             <Badge
-              className="border"
+              className="border border-opacity-20"
               style={{
                 color: isLight ? severityConfig.lightTextColor : severityConfig.darkTextColor,
                 backgroundColor: isLight ? severityConfig.lightBgColor : severityConfig.darkBgColor,
                 borderColor: 'currentColor',
-                borderOpacity: 0.2,
               }}
             >
               {severityConfig.label}
             </Badge>
             <Badge
-              className="border"
+              className="border border-opacity-20"
               style={{
                 color: isLight ? statusConfig.lightTextColor : statusConfig.darkTextColor,
                 backgroundColor: isLight ? statusConfig.lightBgColor : statusConfig.darkBgColor,
                 borderColor: 'currentColor',
-                borderOpacity: 0.2,
               }}
             >
               {statusConfig.label}
