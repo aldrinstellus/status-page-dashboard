@@ -1,7 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Next.js 16 removed devIndicators options - only position is available
+  devIndicators: {
+    position: "bottom-left",
+    buildActivity: false,
+    buildActivityPosition: "bottom-left",
+  },
 };
 
 export default nextConfig;

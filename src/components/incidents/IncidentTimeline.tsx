@@ -16,13 +16,21 @@ export function IncidentTimeline({
     <section aria-labelledby="incidents-heading">
       <h2
         id="incidents-heading"
-        className="text-lg font-semibold text-zinc-100 light:text-zinc-900 mb-4"
+        className="text-lg font-semibold mb-4"
+        style={{ color: 'var(--sp-text-primary)' }}
       >
         {title}
       </h2>
 
       {incidents.length === 0 ? (
-        <div className="text-center py-8 text-zinc-500 light:text-zinc-600 bg-zinc-900/30 light:bg-zinc-100/50 rounded-xl border border-zinc-800 light:border-zinc-200">
+        <div
+          className="text-center py-8 rounded-xl border"
+          style={{
+            color: 'var(--sp-text-muted)',
+            background: 'var(--sp-bg-muted)',
+            borderColor: 'var(--sp-border)'
+          }}
+        >
           <div className="text-2xl mb-2">✓</div>
           <p>{emptyMessage}</p>
         </div>

@@ -23,9 +23,13 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     setMounted(true);
     const savedTheme = localStorage.getItem('status-page-theme') as Theme | null;
-    if (savedTheme) {
+    if (savedTheme && (savedTheme === 'light' || savedTheme === 'dark')) {
       setTheme(savedTheme);
       document.documentElement.classList.toggle('light', savedTheme === 'light');
+      document.documentElement.classList.toggle('dark', savedTheme === 'dark');
+    } else {
+      // Default to dark
+      document.documentElement.classList.add('dark');
     }
   }, []);
 
@@ -34,7 +38,13 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     setTheme(newTheme);
     localStorage.setItem('status-page-theme', newTheme);
     document.documentElement.classList.toggle('light', newTheme === 'light');
+    document.documentElement.classList.toggle('dark', newTheme === 'dark');
   };
+
+  // Prevent flash of wrong theme
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme, mounted }}>

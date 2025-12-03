@@ -44,62 +44,161 @@ export interface StatusResponse {
 }
 
 // Status Configuration for UI
+// Note: Dark mode is default, .light class enables light mode
+// Uses CSS variable-based colors for theme-aware styling
 export const STATUS_CONFIG: Record<ServiceStatus, {
   label: string;
   color: string;
   bgColor: string;
   borderColor: string;
   icon: string;
+  // Theme-aware inline style colors
+  darkTextColor: string;
+  lightTextColor: string;
+  darkBgColor: string;
+  lightBgColor: string;
+  darkBorderColor: string;
+  lightBorderColor: string;
 }> = {
   operational: {
     label: 'Operational',
-    color: 'text-green-400',
-    bgColor: 'bg-green-500/20',
-    borderColor: 'border-green-500/30',
-    icon: '✓'
+    color: '',
+    bgColor: '',
+    borderColor: '',
+    icon: '✓',
+    darkTextColor: '#4ade80',
+    lightTextColor: '#15803d',
+    darkBgColor: 'rgba(34, 197, 94, 0.2)',
+    lightBgColor: '#dcfce7',
+    darkBorderColor: 'rgba(34, 197, 94, 0.3)',
+    lightBorderColor: '#86efac',
   },
   degraded: {
     label: 'Degraded Performance',
-    color: 'text-yellow-400',
-    bgColor: 'bg-yellow-500/20',
-    borderColor: 'border-yellow-500/30',
-    icon: '⚠'
+    color: '',
+    bgColor: '',
+    borderColor: '',
+    icon: '⚠',
+    darkTextColor: '#facc15',
+    lightTextColor: '#b45309',
+    darkBgColor: 'rgba(234, 179, 8, 0.2)',
+    lightBgColor: '#fef3c7',
+    darkBorderColor: 'rgba(234, 179, 8, 0.3)',
+    lightBorderColor: '#fcd34d',
   },
   outage: {
     label: 'Major Outage',
-    color: 'text-red-400',
-    bgColor: 'bg-red-500/20',
-    borderColor: 'border-red-500/30',
-    icon: '✕'
+    color: '',
+    bgColor: '',
+    borderColor: '',
+    icon: '✕',
+    darkTextColor: '#f87171',
+    lightTextColor: '#b91c1c',
+    darkBgColor: 'rgba(239, 68, 68, 0.2)',
+    lightBgColor: '#fee2e2',
+    darkBorderColor: 'rgba(239, 68, 68, 0.3)',
+    lightBorderColor: '#fca5a5',
   },
   maintenance: {
     label: 'Under Maintenance',
-    color: 'text-blue-400',
-    bgColor: 'bg-blue-500/20',
-    borderColor: 'border-blue-500/30',
-    icon: '🔧'
+    color: '',
+    bgColor: '',
+    borderColor: '',
+    icon: '🔧',
+    darkTextColor: '#60a5fa',
+    lightTextColor: '#1d4ed8',
+    darkBgColor: 'rgba(59, 130, 246, 0.2)',
+    lightBgColor: '#dbeafe',
+    darkBorderColor: 'rgba(59, 130, 246, 0.3)',
+    lightBorderColor: '#93c5fd',
   },
 };
 
 // Incident Status Configuration
+// Note: Dark mode is default, .light class enables light mode
 export const INCIDENT_STATUS_CONFIG: Record<IncidentStatus, {
   label: string;
   color: string;
   bgColor: string;
+  darkTextColor: string;
+  lightTextColor: string;
+  darkBgColor: string;
+  lightBgColor: string;
 }> = {
-  investigating: { label: 'Investigating', color: 'text-red-400', bgColor: 'bg-red-500/20' },
-  identified: { label: 'Identified', color: 'text-orange-400', bgColor: 'bg-orange-500/20' },
-  monitoring: { label: 'Monitoring', color: 'text-yellow-400', bgColor: 'bg-yellow-500/20' },
-  resolved: { label: 'Resolved', color: 'text-green-400', bgColor: 'bg-green-500/20' },
+  investigating: {
+    label: 'Investigating',
+    color: '',
+    bgColor: '',
+    darkTextColor: '#f87171',
+    lightTextColor: '#b91c1c',
+    darkBgColor: 'rgba(239, 68, 68, 0.2)',
+    lightBgColor: '#fee2e2',
+  },
+  identified: {
+    label: 'Identified',
+    color: '',
+    bgColor: '',
+    darkTextColor: '#fb923c',
+    lightTextColor: '#c2410c',
+    darkBgColor: 'rgba(249, 115, 22, 0.2)',
+    lightBgColor: '#ffedd5',
+  },
+  monitoring: {
+    label: 'Monitoring',
+    color: '',
+    bgColor: '',
+    darkTextColor: '#facc15',
+    lightTextColor: '#b45309',
+    darkBgColor: 'rgba(234, 179, 8, 0.2)',
+    lightBgColor: '#fef3c7',
+  },
+  resolved: {
+    label: 'Resolved',
+    color: '',
+    bgColor: '',
+    darkTextColor: '#4ade80',
+    lightTextColor: '#15803d',
+    darkBgColor: 'rgba(34, 197, 94, 0.2)',
+    lightBgColor: '#dcfce7',
+  },
 };
 
 // Severity Configuration
+// Note: Dark mode is default, .light class enables light mode
 export const SEVERITY_CONFIG: Record<IncidentSeverity, {
   label: string;
   color: string;
   bgColor: string;
+  darkTextColor: string;
+  lightTextColor: string;
+  darkBgColor: string;
+  lightBgColor: string;
 }> = {
-  minor: { label: 'Minor', color: 'text-yellow-400', bgColor: 'bg-yellow-500/20' },
-  major: { label: 'Major', color: 'text-orange-400', bgColor: 'bg-orange-500/20' },
-  critical: { label: 'Critical', color: 'text-red-400', bgColor: 'bg-red-500/20' },
+  minor: {
+    label: 'Minor',
+    color: '',
+    bgColor: '',
+    darkTextColor: '#facc15',
+    lightTextColor: '#b45309',
+    darkBgColor: 'rgba(234, 179, 8, 0.2)',
+    lightBgColor: '#fef3c7',
+  },
+  major: {
+    label: 'Major',
+    color: '',
+    bgColor: '',
+    darkTextColor: '#fb923c',
+    lightTextColor: '#c2410c',
+    darkBgColor: 'rgba(249, 115, 22, 0.2)',
+    lightBgColor: '#ffedd5',
+  },
+  critical: {
+    label: 'Critical',
+    color: '',
+    bgColor: '',
+    darkTextColor: '#f87171',
+    lightTextColor: '#b91c1c',
+    darkBgColor: 'rgba(239, 68, 68, 0.2)',
+    lightBgColor: '#fee2e2',
+  },
 };

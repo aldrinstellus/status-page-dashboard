@@ -1,13 +1,65 @@
 @import "tailwindcss";
 
+/* Hide Next.js dev indicator badge - RULE: Never show in demos */
+[data-nextjs-build-indicator],
+[data-nextjs-static-indicator],
+nextjs-portal,
+[data-nextjs-toast],
+[data-nextjs-dev-indicator],
+body > nextjs-portal,
+#__next-build-watcher,
+[class*="nextjs-portal"],
+[class*="__next-build"],
+/* Next.js 15+ dev indicator - circular "N" button */
+button[class*="nextjs"],
+div[style*="position: fixed"][style*="bottom"][style*="left"] > button,
+body > div:last-child button[aria-label],
+/* Aggressive targeting for the floating dev button */
+body > div[style*="z-index"]:last-of-type {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Dark Theme (default) */
 :root {
   --background: #09090b;
   --foreground: #fafafa;
+
+  /* Status Page specific variables - Dark Mode */
+  --sp-bg-primary: #09090b;
+  --sp-bg-secondary: #18181b;
+  --sp-bg-card: rgba(24, 24, 27, 0.5);
+  --sp-bg-hover: #27272a;
+  --sp-bg-muted: rgba(24, 24, 27, 0.3);
+
+  --sp-text-primary: #fafafa;
+  --sp-text-secondary: #a1a1aa;
+  --sp-text-muted: #71717a;
+
+  --sp-border: #27272a;
+  --sp-border-light: #3f3f46;
 }
 
+/* Light Theme */
 .light {
-  --background: #fafafa;
+  --background: #ffffff;
   --foreground: #09090b;
+
+  /* Status Page specific variables - Light Mode */
+  --sp-bg-primary: #ffffff;
+  --sp-bg-secondary: #fafafa;
+  --sp-bg-card: #ffffff;
+  --sp-bg-hover: #f4f4f5;
+  --sp-bg-muted: #f4f4f5;
+
+  --sp-text-primary: #09090b;
+  --sp-text-secondary: #3f3f46;
+  --sp-text-muted: #52525b;
+
+  --sp-border: #d4d4d8;
+  --sp-border-light: #a1a1aa;
 }
 
 @theme inline {
@@ -17,50 +69,27 @@
   --font-mono: var(--font-geist-mono);
 }
 
+html {
+  color-scheme: dark;
+}
+
+html.light {
+  color-scheme: light;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--sp-bg-primary);
+  color: var(--sp-text-primary);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
   min-height: 100vh;
 }
 
-/* Light mode overrides */
-.light .light\:bg-white\/80 {
-  background-color: rgba(255, 255, 255, 0.8);
+/* WCAG 2.1 AA Focus Indicators */
+button, [role="button"], [tabindex="0"], a {
+  outline: none;
 }
 
-.light .light\:border-zinc-200 {
-  border-color: rgb(228 228 231);
-}
-
-.light .light\:border-zinc-300 {
-  border-color: rgb(212 212 216);
-}
-
-.light .light\:text-zinc-900 {
-  color: rgb(24 24 27);
-}
-
-.light .light\:text-zinc-600 {
-  color: rgb(82 82 91);
-}
-
-.light .light\:text-zinc-700 {
-  color: rgb(63 63 70);
-}
-
-.light .light\:bg-zinc-100\/50 {
-  background-color: rgba(244, 244, 245, 0.5);
-}
-
-.light .light\:bg-zinc-200 {
-  background-color: rgb(228 228 231);
-}
-
-.light .light\:hover\:border-zinc-300:hover {
-  border-color: rgb(212 212 216);
-}
-
-.light .light\:border-l-zinc-300 {
-  border-left-color: rgb(212 212 216);
+button:focus-visible, [role="button"]:focus-visible, [tabindex="0"]:focus-visible, a:focus-visible {
+  outline: 2px solid #5E6AD2;
+  outline-offset: 2px;
 }

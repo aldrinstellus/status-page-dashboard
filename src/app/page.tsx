@@ -59,7 +59,7 @@ export default function StatusPage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="flex items-center gap-3 text-zinc-400">
+        <div className="flex items-center gap-3" style={{ color: 'var(--sp-text-muted)' }}>
           <RefreshCw className="h-5 w-5 animate-spin" />
           <span>Loading status...</span>
         </div>
@@ -71,10 +71,11 @@ export default function StatusPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <p className="text-red-400 mb-4">{error}</p>
+          <p className="text-red-500 mb-4">{error}</p>
           <button
             onClick={fetchStatus}
-            className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-lg text-sm transition-colors"
+            className="px-4 py-2 rounded-lg text-sm transition-colors"
+            style={{ background: 'var(--sp-bg-hover)', color: 'var(--sp-text-primary)' }}
           >
             Try Again
           </button>
@@ -86,14 +87,23 @@ export default function StatusPage() {
   return (
     <main className="min-h-screen">
       {/* Header */}
-      <header className="border-b border-zinc-800 light:border-zinc-200 bg-zinc-950/50 light:bg-white/50 backdrop-blur-sm sticky top-0 z-10">
+      <header
+        className="border-b backdrop-blur-sm sticky top-0 z-10"
+        style={{
+          borderColor: 'var(--sp-border)',
+          background: 'var(--sp-bg-card)'
+        }}
+      >
         <div className="max-w-4xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm">
                 JL
               </div>
-              <h1 className="text-xl font-bold text-zinc-100 light:text-zinc-900">
+              <h1
+                className="text-xl font-bold"
+                style={{ color: 'var(--sp-text-primary)' }}
+              >
                 System Status
               </h1>
             </div>
@@ -101,20 +111,22 @@ export default function StatusPage() {
             <div className="flex items-center gap-3">
               <button
                 onClick={fetchStatus}
-                className="p-2 rounded-lg hover:bg-zinc-800 light:hover:bg-zinc-100 transition-colors"
+                className="p-2 rounded-lg transition-colors"
+                style={{ color: 'var(--sp-text-secondary)' }}
                 aria-label="Refresh status"
               >
-                <RefreshCw className="h-4 w-4 text-zinc-400" />
+                <RefreshCw className="h-4 w-4" />
               </button>
               <button
                 onClick={toggleTheme}
-                className="p-2 rounded-lg hover:bg-zinc-800 light:hover:bg-zinc-100 transition-colors"
+                className="p-2 rounded-lg transition-colors"
+                style={{ color: 'var(--sp-text-secondary)' }}
                 aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
               >
                 {theme === 'dark' ? (
-                  <Sun className="h-4 w-4 text-zinc-400" />
+                  <Sun className="h-4 w-4" />
                 ) : (
-                  <Moon className="h-4 w-4 text-zinc-600" />
+                  <Moon className="h-4 w-4" />
                 )}
               </button>
             </div>
@@ -138,10 +150,13 @@ export default function StatusPage() {
           >
             <div className="flex flex-col items-center gap-3">
               <StatusBadge status={data.overall} size="lg" />
-              <p className="text-lg text-zinc-300 light:text-zinc-700">
+              <p
+                className="text-lg"
+                style={{ color: 'var(--sp-text-secondary)' }}
+              >
                 {getOverallMessage(data.overall)}
               </p>
-              <p className="text-xs text-zinc-500">
+              <p style={{ color: 'var(--sp-text-muted)', fontSize: '0.75rem' }}>
                 Last updated: {formatRelativeTime(data.lastUpdated)}
               </p>
             </div>
@@ -153,7 +168,8 @@ export default function StatusPage() {
           <section aria-labelledby="services-heading">
             <h2
               id="services-heading"
-              className="text-lg font-semibold text-zinc-100 light:text-zinc-900 mb-4"
+              className="text-lg font-semibold mb-4"
+              style={{ color: 'var(--sp-text-primary)' }}
             >
               Services
             </h2>
@@ -171,12 +187,23 @@ export default function StatusPage() {
         )}
 
         {/* Footer */}
-        <footer className="text-center text-xs text-zinc-600 light:text-zinc-500 pt-8 border-t border-zinc-800 light:border-zinc-200">
+        <footer
+          className="text-center pt-8 border-t"
+          style={{
+            borderColor: 'var(--sp-border)',
+            color: 'var(--sp-text-muted)',
+            fontSize: '0.75rem'
+          }}
+        >
           <a
             href={supportPortalUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 px-4 py-2 mb-4 rounded-lg bg-zinc-800 light:bg-zinc-100 hover:bg-zinc-700 light:hover:bg-zinc-200 text-zinc-200 light:text-zinc-700 transition-colors text-sm font-medium"
+            className="inline-flex items-center gap-1.5 px-4 py-2 mb-4 rounded-lg text-sm font-medium transition-colors"
+            style={{
+              background: 'var(--sp-bg-hover)',
+              color: 'var(--sp-text-secondary)'
+            }}
           >
             <ExternalLink className="h-4 w-4" />
             Back to Support Portal
